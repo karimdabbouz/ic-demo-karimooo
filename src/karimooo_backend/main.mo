@@ -50,7 +50,6 @@ shared(init_msg) actor class Main() {
     stable var usernameDBArray : [(Text, UserID)] = []; // There's probably a better way to keep track of usernames
     stable var imageDBArray : [(UserID, Nat)] = [];
     stable var nftImageDataStable : [Nat8] = [];
-    // stable var defaultProfileImageStable : [Nat8] = [];
     private stable var imageID : Nat = 0;
 
     // Writes stable Array to non-stable object stores after upgrading
@@ -79,7 +78,6 @@ shared(init_msg) actor class Main() {
     // Writes stable Array to non-stable Buffer after upgrading
     private func instantiateBuffer() : Buffer.Buffer<Nat8> {
         let nftImageData : Buffer.Buffer<Nat8> = Buffer.fromArray(nftImageDataStable);
-        // let defaultProfileImage : Buffer.Buffer<Nat8> = Buffer.fromArray(defaultProfileImageStable);
         return nftImageData;
     };
 
@@ -88,7 +86,6 @@ shared(init_msg) actor class Main() {
 
     system func preupgrade() {
         nftImageDataStable := nftImageData.toArray();
-        // defaultProfileImageStable := defaultProfileImage.toArray();
         userDBArray := Iter.toArray(userDB.entries());
         usernameDBArray := Iter.toArray(usernameDB.entries());
         imageDBArray := Iter.toArray(imageDB.entries());
@@ -99,7 +96,6 @@ shared(init_msg) actor class Main() {
         usernameDBArray := [];
         imageDBArray := [];
         nftImageDataStable := [];
-        // defaultProfileImageStable := [];
     };
 
 
@@ -110,7 +106,7 @@ shared(init_msg) actor class Main() {
 
     // Sets image data for NFT
     public shared(msg) func setNFTImagedata(data: [Nat8]) : async Result.Result<Text, Text> {
-        // assert (msg.caller == owner);
+        assert (msg.caller == owner);
         for (elem in data.vals()) {
             nftImageData.add(elem);
         };
@@ -123,14 +119,13 @@ shared(init_msg) actor class Main() {
     // ////////////////////////
 
 
+    // Update/set username and profile image
     public shared(msg) func updateProfileData(user: UserID, username: Text, imageData: ?Blob) : async Text {
         assert (Principal.toText(msg.caller) != "2vxsx-fae");
-
         let isDataComplete : Bool = switch (imageData) {
             case (null) { false };
             case (_) { true };
         };
-
         let entry = userDB.get(user);
         switch (entry) {
             case (null) { // user does not yet exist
@@ -187,134 +182,7 @@ shared(init_msg) actor class Main() {
     };
 
 
-
-    // THIS BULLSHIT! EVERYTIME A CHINESE BUILDS A FUNCTION MONGOLIAN COME AND DONT LOAD DEFAULT IMAGE FORM FORNTEND!!!
-
-    // public shared(msg) func updateProfileData(user: UserID, username: Text, imageDataArg: ?Blob) : async Text {
-    //     assert (Principal.toText(msg.caller) != "2vxsx-fae");
-
-
-    //     let imageData : Blob = switch (imageDataArg) {
-    //         case (null) { Blob.fromArray(defaultProfileImage.toArray()) };
-    //         case (?item) { item };
-    //     };
-
-
-    //     let entry = userDB.get(user);
-    //     switch (entry) {
-    //         case (null) { // user does not yet exist
-    //             // check if username is taken
-    //             let usernameEntry = usernameDB.get(username);
-    //             switch usernameEntry {
-    //                 case null { // username not yet taken
-    //                     let profileData : Profile = {
-    //                         username = username;
-    //                         profileImage = imageData;
-    //                         hasDonatedData = true;
-    //                     };
-    //                     usernameDB.put(username, user);
-    //                     userDB.put(user, profileData);
-    //                     return "profile created";
-    //                 };
-    //                 case (?usernameExists) { // username is already taken
-    //                     return "username already exists";
-    //                 };
-    //             };
-    //         };
-    //         case (?item) { // user already exists. update profile
-    //             let usernameEntry = usernameDB.get(username);
-    //             switch usernameEntry {
-    //                 case null { // username not yet taken
-    //                     let profileData : Profile = {
-    //                         username = username;
-    //                         profileImage = imageData;
-    //                         hasDonatedData = true;
-    //                     };
-    //                     usernameDB.delete(item.username);
-    //                     usernameDB.put(username, user);
-    //                     userDB.put(user, profileData);
-    //                     return "profile updated. username changed successfully";
-    //                 };
-    //                 case (?usernameEntry) { // username is already taken
-    //                     // check if username is taken by msg.caller
-    //                     if (usernameEntry == msg.caller) { // username is owned by msg.caller
-    //                         let profileData: Profile = {
-    //                             username = username;
-    //                             profileImage = imageData;
-    //                             hasDonatedData = true;
-    //                         };
-    //                         userDB.put(user, profileData);
-    //                         return "profile updated. no change in username";
-    //                     } else {
-    //                         return "username already exists";
-    //                     };
-    //                 };
-    //             };
-    //         };
-
-    //     };
-    // };
-
-
-    // // OLD ONE:
-    // public shared(msg) func updateProfileData(user: UserID, username: Text, imageData: Blob) : async Text {
-    //     assert (Principal.toText(msg.caller) != "2vxsx-fae");
-    //     let entry = userDB.get(user);
-    //     switch entry {
-    //         case null { // user does not yet exist
-    //             // check if username is taken
-    //             let usernameEntry = usernameDB.get(username);
-    //             switch usernameEntry {
-    //                 case null { // username not taken yet
-    //                     let profileData : Profile = {
-    //                         username = username;
-    //                         profileImage = ?imageData;
-    //                         hasDonatedData = true;
-    //                     };
-    //                     usernameDB.put(username, user);
-    //                     userDB.put(user, profileData);
-    //                     return "profile created";
-    //                 };
-    //                 case (?usernameExists) { // username is already taken
-    //                     return "username already exists";
-    //                 };
-    //             };
-    //         };
-    //         case (?item) { // user already exists. update profile
-    //             let usernameEntry = usernameDB.get(username);
-    //             switch usernameEntry {
-    //                 case null { // username not yet taken
-    //                     let profileData : Profile = {
-    //                         username = username;
-    //                         profileImage = ?imageData;
-    //                         hasDonatedData = true;
-    //                     };
-    //                     usernameDB.delete(item.username);
-    //                     usernameDB.put(username, user);
-    //                     userDB.put(user, profileData);
-    //                     return "profile updated. username changed successfully";
-    //                 };
-    //                 case (?usernameEntry) { // username is already taken
-    //                     // check if username is taken by msg.caller
-    //                     if (usernameEntry == msg.caller) { // username is owned by msg.caller
-    //                         let profileData: Profile = {
-    //                             username = username;
-    //                             profileImage = ?imageData;
-    //                             hasDonatedData = true;
-    //                         };
-    //                         userDB.put(user, profileData);
-    //                         return "profile updated. no change in username";
-    //                     } else {
-    //                         return "username already exists";
-    //                     };
-    //                 };
-    //             };
-    //         };
-
-    //     };
-    // };
-
-
+    // Mints NFT to msg.caller | takes nftImageData and sends it as metadata to the NFT canister
     public shared(msg) func mintReward() : async Nat32 {
         assert (msg.caller != Principal.fromText("2vxsx-fae"));
         let receiver = msg.caller;
@@ -337,16 +205,19 @@ shared(init_msg) actor class Main() {
     // //////////////////////////
 
 
+    // Returns the imageID of a user
     public query func getNFTImageID(principal : UserID) : async ?Nat {
         return imageDB.get(principal);
     };
 
 
+    // Returns the nftImageData (identical for every user)
     public query func getNFTImageData() : async [Nat8] {
         return nftImageData.toArray();
     };
 
 
+    // Returns the profile of a given Principal
     public query func getProfile(id : UserID) : async ?Profile {
         let user = userDB.get(id);
         switch user {
@@ -364,6 +235,7 @@ shared(init_msg) actor class Main() {
     };
 
 
+    // Returns an array of all users
     public query func getAllUsers(): async ?[{principal : Principal; username : Text; hasDonatedData : Bool}] {
         let result = Buffer.Buffer<{principal : Principal; username : Text; hasDonatedData : Bool}>(0);
         let keys = userDB.keys();
@@ -388,7 +260,7 @@ shared(init_msg) actor class Main() {
 
 
     // /////////////////////////
-    // UTILITY FUNCTIONS
+    // UTILITY FUNCTIONS (some not needed in this version)
     // ////////////////////////
 
 
