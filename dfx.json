@@ -1,0 +1,28 @@
+{
+  "canisters": {
+    "karimooo_backend": {
+      "main": "src/karimooo_backend/main.mo",
+      "type": "motoko"
+    },
+    "karimooo_frontend": {
+      "dependencies": [
+        "karimooo_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/karimooo_frontend/src/index.html"
+      },
+      "source": [
+        "src/karimooo_frontend/assets",
+        "dist/karimooo_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "version": 1
+}

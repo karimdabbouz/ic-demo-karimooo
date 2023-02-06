@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,800;1,400;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,900;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+
+
+
+* {
+    font-family: 'Space Mono';
+}
+
+h1 {
+    font-family: 'Mulish' !important;
+}
+
+h2 {
+    font-family: 'Mulish';
+}
+
+h3 {
+    font-family: 'Mulish';
+}
+
+a:link {
+    color: #F88F70;
+    font-weight: bold;
+}
+
+a:visited {
+    color: #F88F70;
+}
+
+a:hover {
+    color: yellow !important;
+}
+
+
+
+@media (min-width: 992px) {
+
+    p {
+        font-size: 1.2em;
+    }
+
+    .above-the-fold p {
+        font-size: 1.5em;
+    }
+
+}
+
+
+.navbar-brand h1 {
+    font-weight: bold;
+}
+
+.navbar-brand a:link {
+    text-decoration: none;
+    color: #212529 !important;
+}
+
+.navbar-brand a:visited {
+    text-decoration: none;
+    color: #212529 !important;
+}
+
+.navbar-brand a:hover {
+    text-decoration: none;
+    color: #F88F70 !important;
+}
+
+
+
+.above-the-fold {
+    padding-top: 120px;
+    min-height: 100vh;
+}
+
+
+
+input[type=checkbox]:checked+label::before {
+    background-color: #F88F70 !important;
+}
+
+.input-switch.style-switch-one input[type="checkbox"]:checked + label {
+    background-color: #F88F70 !important;
+}
+
+.input-switch label {
+    margin-left: 0px !important;
+}
+
+
+.pulsate {
+    -webkit-animation: pulsate 2s ease-out;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes pulsate {
+	0% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 20px rgba(255, 255, 0, 0);
+	}
+
+	100% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
+	}
+}
+
+
+.lds-ripple {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-ripple div {
+    position: absolute;
+    border: 4px solid #F88F70;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+  
+.lds-ripple div:nth-child(2) {
+    animation-delay: -0.5s;
+}
+
+@keyframes lds-ripple {
+    0% {
+      top: 36px;
+      left: 36px;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+    4.9% {
+      top: 36px;
+      left: 36px;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+    5% {
+      top: 36px;
+      left: 36px;
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      top: 0px;
+      left: 0px;
+      width: 72px;
+      height: 72px;
+      opacity: 0;
+    }
+}
+  
